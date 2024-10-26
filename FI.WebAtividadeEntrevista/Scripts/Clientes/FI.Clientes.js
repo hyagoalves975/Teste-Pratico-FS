@@ -7,6 +7,7 @@ $(document).ready(function () {
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
+                "CPF": $(this).fing("#CPF").val(),
                 "CEP": $(this).find("#CEP").val(),
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
@@ -30,7 +31,11 @@ $(document).ready(function () {
             }
         });
     })
-    
+
+    $('#CPF').on('input', function () {
+        const cpf = $this.val();
+        $(this).val(CPFMask(cpf));
+    });
 })
 
 function ModalDialog(titulo, texto) {
@@ -55,4 +60,22 @@ function ModalDialog(titulo, texto) {
 
     $('body').append(texto);
     $('#' + random).modal('show');
+}
+
+function CPFMask(input) {
+    $input.on('input', function () {
+        let cpf = $(this).val();
+
+        cpf = cpf.replace(/\D/g, '');
+
+        if (cpf.length <= 3) {
+            $(this).val(cpf);
+        } else if (cpf.length <= 6) {
+            $(this).val(cpf.slice(0, 3) + '.' + cpf.slice(3));
+        } else if (cpf.length <= 9) {
+            $(this).val(cpf.slice(0, 3) + '.' + cpf.slice(3, 6) + '.' + cpf.slice(6));
+        } else {
+            $(this).val(cpf.slice(0, 3) + '.' + cpf.slice(3, 6) + '.' + cpf.slice(6, 9) + '-' + cpf.slice(9, 11));
+        }
+    });
 }

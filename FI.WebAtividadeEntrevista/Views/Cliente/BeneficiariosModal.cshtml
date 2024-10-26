@@ -1,0 +1,36 @@
+﻿<!-- BeneficiariosModal.cshtml -->
+<div class="modal fade" id="beneficiariosModal" tabindex="-1" role="dialog" aria-labelledby="modalBeneficiariosLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modalBeneficiariosLabel">Beneficiários</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Conteúdo do modal -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="CPFBeneficiarios">CPF:</label>
+                            <input required="required" type="text" class="form-control" id="CPFBeneficiarios" name="CPFBeneficiarios" placeholder="Ex.: 010.011.111-0">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="NomeBeneficiario">Nome:</label>
+                            <input required="required" type="text" class="form-control" id="NomeBeneficiario" name="NomeBeneficiario" placeholder="Ex.: Maria" maxlength="50">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-top:2.6rem">
+                            <button type="submit" class="btn btn-sm btn-success">Incluir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="divListaBeneficiarios"></div>
+        </div>
+    </div>
+</div>
