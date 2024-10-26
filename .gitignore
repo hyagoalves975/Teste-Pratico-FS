@@ -364,7 +364,7 @@ FodyWeavers.xsd
 
 # Ignore bin e obj para projetos .NET
 bin/
-obj/
+
 
 # Ignorar as configurações de usuário específicas do Visual Studio
 .vs/
