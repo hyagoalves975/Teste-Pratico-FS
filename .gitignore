@@ -361,3 +361,36 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore bin e obj para projetos .NET
+bin/
+obj/
+
+# Ignorar as configurações de usuário específicas do Visual Studio
+.vs/
+*.user
+*.suo
+
+# Ignorar as configurações locais do Visual Studio Code
+.vscode/
+
+# Ignorar pacotes NuGet e caches
+packages/
+*.nupkg
+.nuget/
+
+# Ignorar build gerados
+project.lock.json
+project.fragment.lock.json
+*.log
+
+# Ignorar arquivos temporários e de cache
+*~ 
+*.tmp
+*.cache
+
+# Ignorar pasta Roslyn específica
+bin/roslyn/
+
+# Ignorar configurações de publicação local (caso existam)
+appsettings.Development.json
