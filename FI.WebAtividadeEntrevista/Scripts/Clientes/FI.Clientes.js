@@ -7,7 +7,7 @@ $(document).ready(function () {
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
-                "CPF": $(this).fing("#CPF").val(),
+                "CPF": $(this).find("#CPF").val(),
                 "CEP": $(this).find("#CEP").val(),
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
@@ -33,8 +33,23 @@ $(document).ready(function () {
     })
 
     $('#CPF').on('input', function () {
-        const cpf = $this.val();
+        const cpf = $(this).val();
         $(this).val(CPFMask(cpf));
+    });
+
+    $('#CPFBeneficiarios').on('input', function () {
+        const cpfBeneficiario = $(this).val();
+        $(this).val(CPFMask(cpfBeneficiario));
+    });
+
+    $('#Telefone').on('input', function () {
+        const phone = $(this).val();
+        $(this).val(PhoneMask(phone));
+    });
+
+    $('#CEP').on('input', function () {
+        const cep = $(this).val();
+        $(this).val(CepMask(cep));
     });
 })
 
@@ -62,20 +77,38 @@ function ModalDialog(titulo, texto) {
     $('#' + random).modal('show');
 }
 
-function CPFMask(input) {
-    $input.on('input', function () {
-        let cpf = $(this).val();
+function CPFMask(cpf) {
+    cpf = cpf.replace(/\D/g, '');
 
-        cpf = cpf.replace(/\D/g, '');
+    if (cpf.length <= 3) {
+        return cpf;
+    } else if (cpf.length <= 6) {
+        return cpf.slice(0, 3) + '.' + cpf.slice(3);
+    } else if (cpf.length <= 9) {
+        return cpf.slice(0, 3) + '.' + cpf.slice(3, 6) + '.' + cpf.slice(6);
+    } else {
+        return cpf.slice(0, 3) + '.' + cpf.slice(3, 6) + '.' + cpf.slice(6, 9) + '-' + cpf.slice(9, 11);
+    }
+}
 
-        if (cpf.length <= 3) {
-            $(this).val(cpf);
-        } else if (cpf.length <= 6) {
-            $(this).val(cpf.slice(0, 3) + '.' + cpf.slice(3));
-        } else if (cpf.length <= 9) {
-            $(this).val(cpf.slice(0, 3) + '.' + cpf.slice(3, 6) + '.' + cpf.slice(6));
-        } else {
-            $(this).val(cpf.slice(0, 3) + '.' + cpf.slice(3, 6) + '.' + cpf.slice(6, 9) + '-' + cpf.slice(9, 11));
-        }
-    });
+function PhoneMask(phone) {
+    phone = phone.replace(/\D/g, '');
+
+    if (phone.length <= 2) {
+        return phone;
+    } else if (phone.length <= 6) {
+        return '(' + phone.slice(0, 2) + ') ' + phone.slice(2);
+    } else {
+        return '(' + phone.slice(0, 2) + ') ' + phone.slice(2, 6) + '-' + phone.slice(6, 10);
+    }
+}
+
+function CepMask(cep) {
+    cep = cep.replace(/\D/g, '');
+
+    if (cep.length > 5) {
+        cep = cep.slice(0, 5) + "-" + cep.slice(5, 8);
+    }
+
+    return cep;
 }
