@@ -1,7 +1,13 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
+        if (!cpfValidate($('#CPF').val())) {
+            e.preventDefault();
+            alert(" O CPF digitado é inválido.");
+            $('#CPF').focus();
+            return false;
+        }
+
         $.ajax({
             url: urlPost,
             method: "POST",
@@ -33,13 +39,31 @@ $(document).ready(function () {
     })
 
     $('#CPF').on('input', function () {
-        const cpf = $(this).val();
-        $(this).val(CPFMask(cpf));
+        const cpfInput = $(this).val();
+        $(this).val(CPFMask(cpfInput));
+        clearErrorStyle('#CPF', '#errorMessage')
+
+        if (cpfInput.length > 13) {
+            if (!cpfValidate(cpfInput)) {
+                setErrorStyle('#CPF', '#errorMessage')
+            } else {
+                clearErrorStyle('#CPF', '#errorMessage')
+            }
+        }
     });
 
     $('#CPFBeneficiarios').on('input', function () {
         const cpfBeneficiario = $(this).val();
         $(this).val(CPFMask(cpfBeneficiario));
+        clearErrorStyle('#CPFBeneficiarios', '#errorMessageBeneficiarios')
+
+        if (cpfBeneficiario.length > 13) {
+            if (!cpfValidate(cpfBeneficiario)) {
+                setErrorStyle('#CPFBeneficiarios', '#errorMessageBeneficiarios')
+            } else {
+                clearErrorStyle('#CPFBeneficiarios', '#errorMessageBeneficiarios')
+            }
+        }
     });
 
     $('#Telefone').on('input', function () {
@@ -111,4 +135,52 @@ function CepMask(cep) {
     }
 
     return cep;
+}
+
+function cpfValidate(cpf) {
+    cpf = cpf.replace(/[^\d]+/g, '');
+
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+        return false;
+    }
+
+    let sumDigits = 0;
+    for (let i = 0; i < 9; i++) {
+        sumDigits += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+
+    let firstDigit = (sumDigits * 10) % 11;
+    if (firstDigit === 10 || firstDigit === 11) {
+        firstDigit = 0;
+    }
+
+    if (firstDigit !== parseInt(cpf.charAt(9))) {
+        return false;
+    }
+
+    sumDigits = 0;
+    for (let i = 0; i < 10; i++) {
+        sumDigits += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    let secondDigit = (sumDigits * 10) % 11;
+    if (secondDigit === 10 || secondDigit === 11) {
+        secondDigit = 0;
+    }
+    if (secondDigit !== parseInt(cpf.charAt(10))) {
+        return false;
+    }
+
+    return true;
+}
+
+function setErrorStyle(input, span){
+    $(input).css('border-color', 'red')
+
+    $(span).show();
+}
+
+function clearErrorStyle(input, span) {
+    $(input).css('border-color', '')
+
+    $(span).hide();
 }
