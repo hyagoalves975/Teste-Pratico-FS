@@ -52,18 +52,66 @@
         }
     });
 
-    $('#CPFBeneficiarios').on('input', function () {
+    $('#CPFBeneficiario').on('input', function () {
         const cpfBeneficiario = $(this).val();
         $(this).val(CPFMask(cpfBeneficiario));
-        clearErrorStyle('#CPFBeneficiarios', '#errorMessageBeneficiarios')
+        clearErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios')
 
         if (cpfBeneficiario.length > 13) {
             if (!cpfValidate(cpfBeneficiario)) {
-                setErrorStyle('#CPFBeneficiarios', '#errorMessageBeneficiarios')
+                setErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios')
             } else {
-                clearErrorStyle('#CPFBeneficiarios', '#errorMessageBeneficiarios')
+                clearErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios')
             }
         }
+    });
+
+    $('#btnIncluirModal').off('click').on('click', function () {
+        let cpfBeneficiario = $('#CPFBeneficiario').val();
+        let nomeBeneficiario = $('#NomeBeneficiario').val();
+
+        if (cpfBeneficiario && nomeBeneficiario) {
+            addBeneficiarioModal(cpfBeneficiario, nomeBeneficiario);
+        } else {
+            alert("Digite o nome e o CPF do Beneficiário")
+        }
+
+
+        //if (cpfBeneficiario && nomeBeneficiario) {
+
+        //    if (!cpfValidate(cpfBeneficiario)) {
+        //        alert('O CPF digitado é inválido')
+        //        return false;
+        //    }
+
+        //    var newRowTable =
+        //        `<tr>
+        //        <td>${cpfBeneficiario}</td>
+        //        <td>${nomeBeneficiario}</td>
+        //        <td>
+        //            <button type="button" class="btn btn-sm btn-primary btnAlterar">Alterar</button>
+        //            <button type="button" class="btn btn-sm btn-primary btnExcluir">Excluir</button>
+        //        </td>
+        //    </tr>`;
+
+        //    $('#beneficiariosTableBody').append(newRowTable);
+
+        //    $('#CPFBeneficiario').val('');
+        //    $('#NomeBeneficiario').val('');
+        //} else {
+        //    alert("Digite o nome e o CPF do Beneficiário")
+        //}
+    });
+
+    $('#beneficiariosTableBody').on('click', '.btnExcluir', function () {
+        $(this).closest('tr').remove();
+    });
+
+    $('#beneficiariosTableBody').on('click', '.btnAlterar', function () {
+        let row = $(this).closest('tr');
+        let colCPFBeneficiario = row.find('.col-cpfBeneficiario').text();
+        let colNomeBeneficiario = row.find('.col-nomeBeneficiario').text();
+        alterBeneficiarioModal(row, colCPFBeneficiario, colNomeBeneficiario);
     });
 
     $('#Telefone').on('input', function () {
@@ -183,4 +231,51 @@ function clearErrorStyle(input, span) {
     $(input).css('border-color', '')
 
     $(span).hide();
+}
+
+function addBeneficiarioModal(cpfBeneficiario, nomeBeneficiario) {
+    if (!cpfValidate(cpfBeneficiario)) {
+        alert('O CPF digitado é inválido');
+        return false;
+    }
+
+    if (validateCPFBeneficiarioModal(cpfBeneficiario)) {
+        alert('Beneficiário já cadastrado');
+        return false;
+    }
+
+    var newRowTable =
+        `<tr>
+            <td class="col-cpfBeneficiario">${cpfBeneficiario}</td>
+            <td class="col-nomeBeneficiario">${nomeBeneficiario}</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary btnAlterar">Alterar</button>
+                <button type="button" class="btn btn-sm btn-primary btnExcluir">Excluir</button>
+            </td>
+        </tr>`;
+
+    $('#beneficiariosTableBody').append(newRowTable);
+
+    $('#CPFBeneficiario').val('');
+    $('#NomeBeneficiario').val('');
+}
+
+function alterBeneficiarioModal(row, colCPFBeneficiario, colNomeBeneficiario) {
+    $('#CPFBeneficiario').val(colCPFBeneficiario);
+    $('#NomeBeneficiario').val(colNomeBeneficiario);
+
+    row.remove();
+}
+
+function validateCPFBeneficiarioModal(cpfBeneficiario) {
+    let condition = false;
+    $('#beneficiariosTableBody tr').each(function () {
+        const cpfAdicionado = $(this).find('.col-cpfBeneficiario').text();
+
+        if (cpfAdicionado === cpfBeneficiario) {
+            condition = true;
+            return false;
+        }
+    });
+    return condition;
 }

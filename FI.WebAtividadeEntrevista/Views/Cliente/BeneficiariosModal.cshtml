@@ -1,5 +1,4 @@
-﻿<!-- BeneficiariosModal.cshtml -->
-<div class="modal fade" id="beneficiariosModal" tabindex="-1" role="dialog" aria-labelledby="modalBeneficiariosLabel" aria-hidden="true">
+﻿<div class="modal fade" id="beneficiariosModal" tabindex="-1" role="dialog" aria-labelledby="modalBeneficiariosLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,30 +7,42 @@
                 </button>
                 <h4 class="modal-title" id="modalBeneficiariosLabel">Beneficiários</h4>
             </div>
-            <div class="modal-body">
-                <!-- Conteúdo do modal -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="CPFBeneficiarios">CPF:</label>
-                            <input type="text" class="form-control" id="CPFBeneficiarios" name="CPFBeneficiarios" placeholder="Ex.: 010.011.111-0">
-                            <span id="errorMessageBeneficiarios" class="alert-danger alert-danger" role="alert" style="display:none"><h6>CPF INVÁLIDO</h6></span>
+            <form>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div>
+                                <label for="CPFBeneficiarios">CPF:</label>
+                                <input type="text" class="form-control" id="CPFBeneficiario" name="CPFBeneficiario" placeholder="Ex.: 010.011.111-0">
+                                <span id="errorMessageBeneficiarios" class="text-danger h6" style="display:none">CPF INVÁLIDO</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="NomeBeneficiario">Nome:</label>
-                            <input type="text" class="form-control" id="NomeBeneficiario" name="NomeBeneficiario" placeholder="Ex.: Maria" maxlength="50">
+                        <div class="col-md-6">
+                            <div>
+                                <label for="NomeBeneficiario">Nome:</label>
+                                <input type="text" class="form-control" id="NomeBeneficiario" name="NomeBeneficiario" placeholder="Ex.: Maria" maxlength="50">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group" style="margin-top:2.6rem">
-                            <button type="submit" class="btn btn-sm btn-success">Incluir</button>
+                        <div class="col-md-2">
+                            <div style="margin-top:2.6rem">
+                                <button type="button" id="btnIncluirModal" class="btn btn-success btn-sm">Incluir</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </form>
+            <div id="divListaBeneficiarios" class="container">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="col-md-4">CPF</th>
+                            <th class="col-md-4">Nome</th>
+                            <th class="col-md-4">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="beneficiariosTableBody"></tbody>
+                </table>
             </div>
-            <div id="divListaBeneficiarios"></div>
         </div>
     </div>
 </div>
