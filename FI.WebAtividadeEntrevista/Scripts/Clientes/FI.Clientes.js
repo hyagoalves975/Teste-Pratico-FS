@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('#formCadastro').submit(function (e) {
+    $('#formCadastro').off('submit').submit(function (e) {
         e.preventDefault();
         if (!cpfValidate($('#CPF').val())) {
             e.preventDefault();
@@ -75,39 +75,13 @@
         } else {
             alert("Digite o nome e o CPF do Beneficiário")
         }
-
-
-        //if (cpfBeneficiario && nomeBeneficiario) {
-
-        //    if (!cpfValidate(cpfBeneficiario)) {
-        //        alert('O CPF digitado é inválido')
-        //        return false;
-        //    }
-
-        //    var newRowTable =
-        //        `<tr>
-        //        <td>${cpfBeneficiario}</td>
-        //        <td>${nomeBeneficiario}</td>
-        //        <td>
-        //            <button type="button" class="btn btn-sm btn-primary btnAlterar">Alterar</button>
-        //            <button type="button" class="btn btn-sm btn-primary btnExcluir">Excluir</button>
-        //        </td>
-        //    </tr>`;
-
-        //    $('#beneficiariosTableBody').append(newRowTable);
-
-        //    $('#CPFBeneficiario').val('');
-        //    $('#NomeBeneficiario').val('');
-        //} else {
-        //    alert("Digite o nome e o CPF do Beneficiário")
-        //}
     });
 
-    $('#beneficiariosTableBody').on('click', '.btnExcluir', function () {
+    $('#beneficiariosTableBody').off('click').on('click', '.btnExcluir', function () {
         $(this).closest('tr').remove();
     });
 
-    $('#beneficiariosTableBody').on('click', '.btnAlterar', function () {
+    $('#beneficiariosTableBody').off('click').on('click', '.btnAlterar', function () {
         let row = $(this).closest('tr');
         let colCPFBeneficiario = row.find('.col-cpfBeneficiario').text();
         let colNomeBeneficiario = row.find('.col-nomeBeneficiario').text();
