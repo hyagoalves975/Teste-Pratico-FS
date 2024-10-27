@@ -20,6 +20,7 @@ namespace FI.AtividadeEntrevista.DAL
 
             parametros.Add(new System.Data.SqlClient.SqlParameter("Nome", cliente.Nome));
             parametros.Add(new System.Data.SqlClient.SqlParameter("Sobrenome", cliente.Sobrenome));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", cliente.CPF));
             parametros.Add(new System.Data.SqlClient.SqlParameter("Nacionalidade", cliente.Nacionalidade));
             parametros.Add(new System.Data.SqlClient.SqlParameter("CEP", cliente.CEP));
             parametros.Add(new System.Data.SqlClient.SqlParameter("Estado", cliente.Estado));
