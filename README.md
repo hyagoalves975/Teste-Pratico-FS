@@ -2,7 +2,7 @@
 
 # Projeto de Cadastro de Clientes com Beneficiários
 
-Este projeto tem como objetivo criar um sistema de cadastro de clientes, permitindo a adição de beneficiários para cada cliente. O sistema inclui validações de dados essenciais, principalmente para CPF, e segue padrões visuais consistentes para garantir uma interface intuitiva e uniforme.
+Este projeto tem como objetivo alterar um sistema de cadastro de clientes, permitindo a adição de beneficiários para cada cliente. O sistema inclui validações de dados essenciais, principalmente para CPF, e segue padrões visuais consistentes para garantir uma interface intuitiva e uniforme.
 
 ---
 
