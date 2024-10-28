@@ -1,5 +1,6 @@
-﻿$(document).ready(function () {
-    $('#formCadastro').off('submit').submit(function (e) {
+﻿window.beneficiariosList = [];
+$(document).ready(function () {
+    $('#formCadastro').off('submit').on('submit', function (e) {
         e.preventDefault();
         if (!cpfValidate($('#CPF').val())) {
             e.preventDefault();
@@ -8,33 +9,42 @@
             return false;
         }
 
+        var cpf = clearString($("#CPF").val());
+        var cep = clearString($("#CEP").val());
+        var telefone = clearString($("#Telefone").val());
+
         $.ajax({
             url: urlPost,
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
-                "CPF": $(this).find("#CPF").val(),
-                "CEP": $(this).find("#CEP").val(),
+                "CPF": cpf,
+                "CEP": cep,
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
                 "Nacionalidade": $(this).find("#Nacionalidade").val(),
                 "Estado": $(this).find("#Estado").val(),
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val()
+                "Telefone": telefone,
+                "Beneficiarios": beneficiariosList
             },
             error:
-            function (r) {
-                if (r.status == 400)
-                    ModalDialog("Ocorreu um erro", r.responseJSON);
-                else if (r.status == 500)
-                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
-            },
+                function (r) {
+                    if (r.status == 400)
+                        ModalDialog("Ocorreu um erro", r.responseJSON);
+                    else if (r.status == 500)
+                        ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                    else if (r.status == 422)
+                        ModalDialog("Ocorreu um erro", r.responseJSON);
+                },
             success:
-            function (r) {
-                ModalDialog("Sucesso!", r)
-                $("#formCadastro")[0].reset();
-            }
+                function (r) {
+                    ModalDialog("Sucesso!", r)
+                    $("#formCadastro")[0].reset();
+                    $('#beneficiariosTableBody').empty();
+                    listaBeneficiarios = [];
+                }
         });
     })
 
@@ -66,6 +76,12 @@
         }
     });
 
+    $('#btnClose').off('click').on('click', function () {
+        clearErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios');
+        $('#CPFBeneficiario').val('');
+        $('#NomeBeneficiario').val('');
+    });
+
     $('#btnIncluirModal').off('click').on('click', function () {
         let cpfBeneficiario = $('#CPFBeneficiario').val();
         let nomeBeneficiario = $('#NomeBeneficiario').val();
@@ -77,11 +93,14 @@
         }
     });
 
-    $('#beneficiariosTableBody').off('click').on('click', '.btnExcluir', function () {
+    $(document).off('click', '.btnExcluir').on('click', '.btnExcluir', function () {
+        const cpfBeneficiario = $(this).closest('tr').find('.col-cpfBeneficiario').text();
+        deleteBeneficiarioModal(cpfBeneficiario);
         $(this).closest('tr').remove();
     });
 
     $('#beneficiariosTableBody').off('click').on('click', '.btnAlterar', function () {
+        clearErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios')
         let row = $(this).closest('tr');
         let colCPFBeneficiario = row.find('.col-cpfBeneficiario').text();
         let colNomeBeneficiario = row.find('.col-nomeBeneficiario').text();
@@ -97,7 +116,7 @@
         const cep = $(this).val();
         $(this).val(CepMask(cep));
     });
-})
+});
 
 function ModalDialog(titulo, texto) {
     var random = Math.random().toString().replace('.', '');
@@ -208,15 +227,22 @@ function clearErrorStyle(input, span) {
 }
 
 function addBeneficiarioModal(cpfBeneficiario, nomeBeneficiario) {
-    if (!cpfValidate(cpfBeneficiario)) {
+    const cpfCliente = $("#CPF").val();
+
+    if (cpfBeneficiario === cpfCliente) {
+        alert('Beneficiário inválido');
+        return false;
+    }else if (!cpfValidate(cpfBeneficiario)) {
         alert('O CPF digitado é inválido');
         return false;
-    }
-
-    if (validateCPFBeneficiarioModal(cpfBeneficiario)) {
+    } else if (validateCPFBeneficiarioModal(cpfBeneficiario)) {
         alert('Beneficiário já cadastrado');
         return false;
     }
+
+    var cpf = clearString(cpfBeneficiario);
+
+    beneficiariosList.push({ CPF: cpf, Nome: nomeBeneficiario });
 
     var newRowTable =
         `<tr>
@@ -238,8 +264,15 @@ function alterBeneficiarioModal(row, colCPFBeneficiario, colNomeBeneficiario) {
     $('#CPFBeneficiario').val(colCPFBeneficiario);
     $('#NomeBeneficiario').val(colNomeBeneficiario);
 
+    deleteBeneficiarioModal(colCPFBeneficiario);
+
     row.remove();
 }
+
+function deleteBeneficiarioModal(cpfBeneficiario) {
+    var cpfClean = clearString(cpfBeneficiario);
+    window.beneficiariosList = window.beneficiariosList.filter(b => b.CPF !== cpfClean);
+};
 
 function validateCPFBeneficiarioModal(cpfBeneficiario) {
     let condition = false;
@@ -252,4 +285,8 @@ function validateCPFBeneficiarioModal(cpfBeneficiario) {
         }
     });
     return condition;
+}
+
+function clearString(input) {
+    return input.replace(/[\.\-\(\) ]/g, '');
 }
