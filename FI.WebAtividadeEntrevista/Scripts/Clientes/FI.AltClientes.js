@@ -117,7 +117,6 @@ $(document).ready(function () {
     });
 
     $(document).off('click', '.btnAlterar').on('click', '.btnAlterar', function () {
-        console.log('carregou')
         clearErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios')
         let row = $(this).closest('tr');
         let colCPFBeneficiario = row.find('.col-cpfBeneficiario').text();
