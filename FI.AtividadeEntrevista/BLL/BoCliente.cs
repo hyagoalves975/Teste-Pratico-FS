@@ -78,5 +78,15 @@ namespace FI.AtividadeEntrevista.BLL
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.VerificarExistencia(CPF);
         }
+
+        /// <summary>
+        /// Inclui Lista de Beneficiarios
+        /// </summary>
+        /// <param name="beneficiarios">Objeto de beneficiarios</param>
+        public long IncluirBeneficiarios(DML.Beneficiarios beneficiarios)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            return cli.IncluirBeneficiarios(beneficiarios);
+        }
     }
 }

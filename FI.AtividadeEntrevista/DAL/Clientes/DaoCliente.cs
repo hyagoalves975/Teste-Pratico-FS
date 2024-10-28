@@ -160,5 +160,24 @@ namespace FI.AtividadeEntrevista.DAL
 
             return lista;
         }
+
+        /// <summary>
+        /// Inclui um novo beneficiario
+        /// </summary>
+        /// <param name="beneficiarios">Objeto de beneficiario</param>
+        internal long IncluirBeneficiarios(DML.Beneficiarios beneficiarios)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("Nome", beneficiarios.Nome));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiarios.CPF));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("IdCliente", beneficiarios.IdCliente));
+
+            DataSet ds = base.Consultar("FI_SP_IncBeneficiario", parametros);
+            long ret = 0;
+            if (ds.Tables[0].Rows.Count > 0)
+                long.TryParse(ds.Tables[0].Rows[0][0].ToString(), out ret);
+            return ret;
+        }
     }
 }
