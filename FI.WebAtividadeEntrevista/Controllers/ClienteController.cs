@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using FI.AtividadeEntrevista.DML;
 using System.Web.Services.Description;
+using FI.WebAtividadeEntrevista.Models;
 
 namespace WebAtividadeEntrevista.Controllers
 {
@@ -45,7 +46,6 @@ namespace WebAtividadeEntrevista.Controllers
                 return Json(string.Join(Environment.NewLine, erros));
             }else
             {
-                
                 model.Id = bo.Incluir(new Cliente()
                 {                    
                     CEP = model.CEP,
@@ -105,8 +105,27 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = model.Nacionalidade,
                     Nome = model.Nome,
                     Sobrenome = model.Sobrenome,
-                    Telefone = model.Telefone
+                    Telefone = model.Telefone,
+                    CPF = model.CPF
                 });
+
+                if(model.Beneficiarios != null && model.Beneficiarios.Any())
+                {
+                    List<Beneficiarios> beneficiariosList = new List<Beneficiarios>();
+
+                    foreach (var beneficiarios in model.Beneficiarios)
+                    {
+                        Beneficiarios novoBeneficiario = new Beneficiarios
+                        {
+                            CPF = beneficiarios.CPF,
+                            Nome = beneficiarios.Nome
+                        };
+
+                        beneficiariosList.Add(novoBeneficiario);
+                    }
+
+                    bo.VerificarBeneficiarios(beneficiariosList, model.Id);
+                }
                                
                 return Json("Cadastro alterado com sucesso");
             }
@@ -117,6 +136,7 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoCliente bo = new BoCliente();
             Cliente cliente = bo.Consultar(id);
+            List<Beneficiarios> beneficiariosList = bo.ConsultarBeneficiarios(cliente.Id);
             Models.ClienteModel model = null;
 
             if (cliente != null)
@@ -132,10 +152,27 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = cliente.Nacionalidade,
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
-                    Telefone = cliente.Telefone
+                    Telefone = cliente.Telefone,
+                    CPF = cliente.CPF,
+                    Beneficiarios = new List<BeneficiarioModel>()
                 };
 
-            
+                
+
+                if (beneficiariosList != null && beneficiariosList.Any())
+                {
+                    foreach (var beneficiario in beneficiariosList)
+                    {
+                        BeneficiarioModel beneficiarioModel = new BeneficiarioModel
+                        {
+                            CPF = beneficiario.CPF,
+                            Nome = beneficiario.Nome,
+                        };
+
+                        model.Beneficiarios.Add(beneficiarioModel);
+                    }
+                }
+
             }
 
             return View(model);

@@ -110,6 +110,7 @@ namespace FI.AtividadeEntrevista.DAL
 
             parametros.Add(new System.Data.SqlClient.SqlParameter("Nome", cliente.Nome));
             parametros.Add(new System.Data.SqlClient.SqlParameter("Sobrenome", cliente.Sobrenome));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", cliente.CPF));
             parametros.Add(new System.Data.SqlClient.SqlParameter("Nacionalidade", cliente.Nacionalidade));
             parametros.Add(new System.Data.SqlClient.SqlParameter("CEP", cliente.CEP));
             parametros.Add(new System.Data.SqlClient.SqlParameter("Estado", cliente.Estado));
@@ -154,6 +155,7 @@ namespace FI.AtividadeEntrevista.DAL
                     cli.Nome = row.Field<string>("Nome");
                     cli.Sobrenome = row.Field<string>("Sobrenome");
                     cli.Telefone = row.Field<string>("Telefone");
+                    cli.CPF = row.Field<string>("CPF");
                     lista.Add(cli);
                 }
             }
@@ -178,6 +180,68 @@ namespace FI.AtividadeEntrevista.DAL
             if (ds.Tables[0].Rows.Count > 0)
                 long.TryParse(ds.Tables[0].Rows[0][0].ToString(), out ret);
             return ret;
+        }
+
+        /// <summary>
+        /// Lista todos os beneficiarios do cliente
+        /// </summary>
+        internal List<DML.Beneficiarios> ConsultarBeneficiarios(long idCliente)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("idCliente", idCliente));
+
+            DataSet ds = base.Consultar("FI_SP_ConsBeneficiarios", parametros);
+            List<DML.Beneficiarios> ben = ConverterBeneficiarios(ds);
+
+            return ben;
+        }
+
+        private List<DML.Beneficiarios> ConverterBeneficiarios(DataSet ds)
+        {
+            List<DML.Beneficiarios> beneficiariosList = new List<DML.Beneficiarios>();
+            if (ds != null && ds.Tables != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    DML.Beneficiarios ben = new DML.Beneficiarios();
+                    ben.Id = row.Field<long>("ID");
+                    ben.Nome = row.Field<string>("NOME");
+                    ben.CPF = row.Field<string>("CPF");
+                    ben.IdCliente = row.Field<long>("IDCLIENTE");
+
+                    beneficiariosList.Add(ben);
+                }
+            }
+
+            return beneficiariosList;
+        }
+
+        /// <summary>
+        /// Atualizar Beneficiarios
+        /// </summary>
+        /// <param name="cliente">Objeto de cliente</param>
+        internal void AtualizarBeneficiario(DML.Beneficiarios beneficiarios)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("Nome", beneficiarios.Nome));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiarios.CPF));
+
+            DataSet ds = base.Consultar("FI_SP_AltBenef", parametros);
+        }
+
+        /// <summary>
+        /// Excluir Beneficiarios
+        /// </summary>
+        /// <param name="cliente">Objeto de cliente</param>
+        internal void ExcluirBeneficiarios(long id)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("Id", id));
+
+            base.Executar("FI_SP_DelBenef", parametros);
         }
     }
 }

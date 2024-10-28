@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FI.AtividadeEntrevista.DML;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,12 @@ namespace FI.AtividadeEntrevista.BLL
         {
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.Consultar(id);
+        }
+
+        public List<DML.Beneficiarios> ConsultarBeneficiarios(long idCliente)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            return cli.ConsultarBeneficiarios(idCliente);
         }
 
         /// <summary>
@@ -87,6 +94,58 @@ namespace FI.AtividadeEntrevista.BLL
         {
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.IncluirBeneficiarios(beneficiarios);
+        }
+
+        /// <summary>
+        /// Inclui Lista de Beneficiarios
+        /// </summary>
+        /// <param name="beneficiarios">Objeto de beneficiarios</param>
+        public void AtualizarBeneficiario(DML.Beneficiarios beneficiarios)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            cli.AtualizarBeneficiario(beneficiarios);
+        }
+
+        public void ExcluirBeneficiarios(long id)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            cli.ExcluirBeneficiarios(id);
+        }
+
+        /// <summary>
+        /// Atualização de Beneficiarios
+        /// </summary>
+        /// <param name="beneficiarios">Objeto de beneficiarios</param>
+        public void VerificarBeneficiarios(List<DML.Beneficiarios> beneficiariosList, long idCliente)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+
+            List<DML.Beneficiarios> beneficiariosAtuaisList = ConsultarBeneficiarios(idCliente);
+
+            var beneficiariosAtuaisDict = beneficiariosAtuaisList.ToDictionary(b => b.CPF);
+
+            foreach (var novoBeneficiario in beneficiariosList)
+            {
+                if (beneficiariosAtuaisDict.TryGetValue(novoBeneficiario.CPF, out var beneficiarioAtual))
+                {
+                    beneficiarioAtual.CPF = novoBeneficiario.CPF;
+                    beneficiarioAtual.Nome = novoBeneficiario.Nome;
+                    beneficiarioAtual.IdCliente = idCliente;
+
+                    AtualizarBeneficiario(beneficiarioAtual);
+                }
+                else
+                {                    
+                    novoBeneficiario.IdCliente = idCliente;
+                    IncluirBeneficiarios(novoBeneficiario);
+                }
+            }
+
+            var beneficiariosParaRemover = beneficiariosAtuaisList.Where(b => !beneficiariosList.Any(n => n.CPF == b.CPF)).ToList();
+            foreach (var beneficiarioParaRemover in beneficiariosParaRemover)
+            {
+                ExcluirBeneficiarios(beneficiarioParaRemover.Id);
+            }
         }
     }
 }
