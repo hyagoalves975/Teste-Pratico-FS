@@ -148,3 +148,13 @@ function validateCPFBeneficiarioModal(cpfBeneficiario) {
 function clearString(input) {
     return input.replace(/[\.\-\(\) ]/g, '');
 }
+
+function disabledButton(btn) {
+    $(btn).prop('disabled', true);
+}
+
+function enabledButton(btn) {
+    if ($(btn).prop('disabled') === true) {
+        $(btn).prop('disabled', false)
+    }
+}

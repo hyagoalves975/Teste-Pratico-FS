@@ -76,10 +76,14 @@ $(document).ready(function () {
         }
     });
 
-    $('#btnClose').off('click').on('click', function () {
-        clearErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios');
-        $('#CPFBeneficiario').val('');
-        $('#NomeBeneficiario').val('');
+    $('#btnClose').off('pointerdown').on('pointerdown', function () {
+        if ($(this).prop('disabled') === true) {
+            alert("Clique em Incluir para completar a ação!!!");
+        } else {
+            clearErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios');
+            $('#CPFBeneficiario').val('');
+            $('#NomeBeneficiario').val('');
+        }
     });
 
     $('#btnIncluirModal').off('click').on('click', function () {
@@ -91,6 +95,8 @@ $(document).ready(function () {
         } else {
             alert("Digite o nome e o CPF do Beneficiário")
         }
+
+        enabledButton('#btnClose')
     });
 
     $(document).off('click', '.btnExcluir').on('click', '.btnExcluir', function () {
@@ -101,6 +107,7 @@ $(document).ready(function () {
 
     $('#beneficiariosTableBody').off('click').on('click', '.btnAlterar', function () {
         clearErrorStyle('#CPFBeneficiario', '#errorMessageBeneficiarios')
+        disabledButton('#btnClose')
         let row = $(this).closest('tr');
         let colCPFBeneficiario = row.find('.col-cpfBeneficiario').text();
         let colNomeBeneficiario = row.find('.col-nomeBeneficiario').text();
